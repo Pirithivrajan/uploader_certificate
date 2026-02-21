@@ -113,4 +113,26 @@ async function uploadCertificates() {
     .eq("id", window.currentStudentId);
 
   alert("Certificates Uploaded Successfully!");
+
+  // ================= TEACHER LOGIN =================
+async function teacherLogin() {
+  const email = document.getElementById("teacherEmail").value;
+  const password = document.getElementById("teacherPassword").value;
+
+  const { data, error } = await supabase
+    .from("teachers")
+    .select("*")
+    .eq("email", email)
+    .eq("password", password)
+    .single();
+
+  if (error || !data) {
+    alert("Invalid Teacher Login");
+    return;
+  }
+
+  document.getElementById("teacherLogin").style.display = "none";
+  document.getElementById("adminPanel").style.display = "block";
+  loadStudents();
+}
 }
