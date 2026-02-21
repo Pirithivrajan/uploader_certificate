@@ -23,6 +23,28 @@
   </div>
 </div>
 
+  <div class="card">
+  <h3>Create Student</h3>
+  <input type="text" id="name" placeholder="Student Name">
+  <input type="email" id="email" placeholder="Email">
+  <input type="text" id="phone" placeholder="Phone">
+  <button onclick="createStudent()">Create Student</button>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Access Code</th>
+    </tr>
+  </thead>
+  <tbody id="studentTable"></tbody>
+</table>
+
+<script>
+loadStudents();
+</script>
 <script src="script.js"></script>
 </body>
 </html>
