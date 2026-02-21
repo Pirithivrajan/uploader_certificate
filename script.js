@@ -1,138 +1,65 @@
-// 🔐 HARD CODED SUPABASE CONFIG (Permanent)
-const SUPABASE_URL = "https://YOUR_SUPABASE_URL.supabase.co";
-const SUPABASE_KEY = "YOUR_ANON_KEY";
+// FIXED ADMIN CREDENTIALS
+const ADMIN_ID = "Admineee23";
+const ADMIN_PASSWORD = "Admin@23";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// ADMIN LOGIN
+function adminLogin(){
+  const id = document.getElementById("adminId").value;
+  const pass = document.getElementById("adminPassword").value;
 
-// ================= ADMIN FUNCTIONS =================
-
-// Generate Random Access Code
-function generateAccessCode() {
-  return Math.random().toString(36).substring(2, 8).toUpperCase();
+  if(id === ADMIN_ID && pass === ADMIN_PASSWORD){
+    document.getElementById("adminLogin").style.display = "none";
+    document.getElementById("adminDashboard").style.display = "block";
+  } else {
+    alert("Invalid Admin Credentials");
+  }
 }
 
-// Create Student
-async function createStudent() {
+// GENERATE ACCESS CODE
+function generateAccessCode(){
+  return Math.random().toString(36).substring(2,8).toUpperCase();
+}
+
+// CREATE STUDENT (Local Demo)
+let students = [];
+
+function createStudent(){
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const phone = document.getElementById("phone").value;
 
-  const access_code = generateAccessCode();
+  const accessCode = generateAccessCode();
 
-  const { error } = await supabase
-    .from("students")
-    .insert([{ name, email, phone, access_code }]);
+  students.push({name,email,phone,accessCode});
+  alert("Student Created!\nAccess Code: " + accessCode);
 
-  if (error) {
-    alert("Error: " + error.message);
-  } else {
-    alert("Student Created!\nAccess Code: " + access_code);
-    loadStudents();
-  }
+  loadStudents();
 }
 
-// Load Students Table
-async function loadStudents() {
-  const { data, error } = await supabase
-    .from("students")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (error) return alert(error.message);
-
+// LOAD STUDENTS
+function loadStudents(){
   const table = document.getElementById("studentTable");
-  if (!table) return;
-
   table.innerHTML = "";
 
-  data.forEach(student => {
+  students.forEach(s=>{
     table.innerHTML += `
       <tr>
-        <td>${student.name}</td>
-        <td>${student.email}</td>
-        <td>${student.access_code}</td>
+        <td>${s.name}</td>
+        <td>${s.email}</td>
+        <td>${s.accessCode}</td>
       </tr>
     `;
   });
 }
 
-// ================= STUDENT FUNCTIONS =================
-
-// Login with Access Code
-async function studentLogin() {
+// STUDENT LOGIN
+function studentLogin(){
   const code = document.getElementById("accessCode").value;
+  const student = students.find(s => s.accessCode === code);
 
-  const { data, error } = await supabase
-    .from("students")
-    .select("*")
-    .eq("access_code", code)
-    .single();
-
-  if (error || !data) {
+  if(student){
+    alert("Welcome " + student.name);
+  } else {
     alert("Invalid Access Code");
-    return;
   }
-
-  document.getElementById("studentDetails").style.display = "block";
-  document.getElementById("studentName").value = data.name;
-  document.getElementById("studentEmail").value = data.email;
-  document.getElementById("studentId").value = data.id;
-
-  window.currentStudentId = data.id;
-}
-
-// Upload Certificates to Supabase Storage
-async function uploadCertificates() {
-  const personalFile = document.getElementById("personalCert").files[0];
-  const professionalFile = document.getElementById("professionalCert").files[0];
-  const description = document.getElementById("description").value;
-
-  if (!window.currentStudentId) {
-    alert("Login First");
-    return;
-  }
-
-  if (personalFile) {
-    await supabase.storage
-      .from("certificates")
-      .upload(`personal/${window.currentStudentId}_${personalFile.name}`, personalFile);
-  }
-
-  if (professionalFile) {
-    await supabase.storage
-      .from("certificates")
-      .upload(`professional/${window.currentStudentId}_${professionalFile.name}`, professionalFile);
-  }
-
-  await supabase
-    .from("students")
-    .update({
-      personal_certs: 1,
-      professional_certs: 1
-    })
-    .eq("id", window.currentStudentId);
-
-  alert("Certificates Uploaded Successfully!");
-
-  // ================= TEACHER LOGIN =================
-async function teacherLogin() {
-  const email = document.getElementById("teacherEmail").value;
-  const password = document.getElementById("teacherPassword").value;
-
-  const { data, error } = await supabase
-    .from("teachers")
-    .select("*")
-    .eq("email", email)
-    .eq("password", password)
-    .single();
-
-  if (error || !data) {
-    alert("Invalid Teacher Login");
-    return;
-  }
-
-  document.getElementById("teacherLogin").style.display = "none";
-  document.getElementById("adminPanel").style.display = "block";
-  loadStudents();
-}
 }
