@@ -1,56 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>Admin - KSRCT</title>
+<title>Admin Login</title>
 <link rel="stylesheet" href="style.css">
+<script src="script.js"></script>
 </head>
 <body>
-<div id="teacherLogin">
-  <input type="email" id="teacherEmail" placeholder="Teacher Email">
-  <input type="password" id="teacherPassword" placeholder="Password">
-  <button onclick="teacherLogin()">Login</button>
-</div>
-<div id="adminPanel" style="display:none;">
-</div>
+
 <header>
-  <img src="logo.png">
+  <img src="logo.png" height="60">
   <div>
     <h1>K.S.RANGASAMY COLLEGE OF TECHNOLOGY</h1>
     <h2>AUTONOMOUS | TIRUCHENGODE</h2>
   </div>
 </header>
 
-<div class="container">
-  <div class="card">
-    <h3 style="color:#0B3D91;margin-bottom:20px;">Admin Panel</h3>
-    <button class="orange-btn" onclick="generateCode()">Generate Access Code</button>
-    <p id="codeDisplay" style="margin-top:15px;font-weight:bold;"></p>
-  </div>
+<!-- ADMIN LOGIN -->
+<div class="card center" id="adminLogin">
+  <h3>Admin Login</h3>
+  <input type="text" id="adminId" placeholder="Admin ID">
+  <input type="password" id="adminPassword" placeholder="Password">
+  <button class="primary-btn" onclick="adminLogin()">Login</button>
 </div>
 
-  <div class="card">
+<!-- ADMIN DASHBOARD -->
+<div id="adminDashboard" style="display:none; padding:40px;">
   <h3>Create Student</h3>
   <input type="text" id="name" placeholder="Student Name">
-  <input type="email" id="email" placeholder="Email">
+  <input type="email" id="email" placeholder="Student Email">
   <input type="text" id="phone" placeholder="Phone">
-  <button onclick="createStudent()">Create Student</button>
+  <button class="orange-btn" onclick="createStudent()">Create Student</button>
+
+  <h3 style="margin-top:30px;">Student List</h3>
+  <table border="1" width="100%">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Access Code</th>
+      </tr>
+    </thead>
+    <tbody id="studentTable"></tbody>
+  </table>
 </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Access Code</th>
-    </tr>
-  </thead>
-  <tbody id="studentTable"></tbody>
-</table>
-
-<script>
-loadStudents();
-</script>
-<script src="script.js"></script>
 </body>
 </html>
